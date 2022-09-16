@@ -1,13 +1,16 @@
+const crypto = require('crypto');
 const axios = require('axios');
+const postsService = require('../service/postsService');
 
+const generate = function () {
+    return crypto.randomBytes(20).toString('hex');
+};
+const request  = function(url, method, data){
+    return axios({ url, method, data });
+};
 test('Should get posts', async function () {
-    const response = await axios({
-        url: 'http://localhost:3000/posts',
-        method: 'get'
-    });
+    const post1 = {title: generate(), content: generate()};
+   
     const posts = response.data;
-    expect(posts).toHaveLength(3);
-    const [firstPost] = posts;
-    expect(firstPost.id).toBe(1);
-    expect(firstPost.title).toBe('REST API: Métodos');
+    await postsService.deletePost(post1.id);
  });
